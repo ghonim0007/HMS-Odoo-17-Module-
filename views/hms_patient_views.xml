@@ -1,0 +1,49 @@
+<odoo>
+    <record id="view_patient_list" model="ir.ui.view">
+        <field name="name">hms.patient.list</field>
+        <field name="model">hms.patient</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="age"/>
+                <field name="department_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_patient_form" model="ir.ui.view">
+        <field name="name">hms.patient.form</field>
+        <field name="model">hms.patient</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="age"/>
+                        <field name="department_id"/>
+                        <field name="department_capacity"/>
+                        <field name="doctor_ids" widget="many2many_tags"/>
+                        <field name="state"/>
+                        <field name="pcr"/>
+                        <field name="cr_ratio"/>
+                        <field name="history"/>
+                    </group>
+                    <notebook>
+                        <page string="Log History">
+                            <field name="log_history_ids" mode="tree">
+                                <tree>
+                                    <field name="created_by"/>
+                                    <field name="date"/>
+                                    <field name="description"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
