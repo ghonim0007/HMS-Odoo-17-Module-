@@ -1,0 +1,99 @@
+<odoo>
+    <record id="action_patient_report" model="ir.actions.report">
+        <field name="name">Patient Status Report</field>
+        <field name="model">hms.patient</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">hms.patient_status_report</field>
+        <field name="report_file">hms.patient_status_report</field>
+        <field name="binding_model_id" ref="model_hms_patient"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="patient_status_report">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="patient">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="row">
+                            <div class="col-12">
+                                <h2 class="text-center mb-4">Patient Status Report</h2>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-4">
+                            <div class="col-6">
+                                <table class="table table-borderless">
+                                    <tr>
+                                        <td><strong>Name:</strong></td>
+                                        <td><span t-field="patient.name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Age:</strong></td>
+                                        <td><span t-field="patient.age"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Department:</strong></td>
+                                        <td><span t-field="patient.department_id.name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Doctors:</strong></td>
+                                        <td>
+                                            <t t-foreach="patient.doctor_ids" t-as="doctor">
+                                                <span t-field="doctor.name"/>
+                                                <t t-if="not doctor_last">, </t>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-6">
+                                <table class="table table-borderless">
+                                    <tr>
+                                        <td><strong>Birth date:</strong></td>
+                                        <td><span t-field="patient.birth_date" t-options="{'widget': 'date'}"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>PCR:</strong></td>
+                                        <td><span t-field="patient.cr_ratio"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Blood Type:</strong></td>
+                                        <td><span t-field="patient.blood_type"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Email:</strong></td>
+                                        <td><span t-field="patient.email"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <h4>Log History</h4>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>User</th>
+                                            <th>Date</th>
+                                            <th>Info</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="patient.log_history_ids" t-as="log">
+                                            <tr>
+                                                <td><span t-field="log.created_by.name"/></td>
+                                                <td><span t-field="log.date" t-options="{'widget': 'datetime'}"/></td>
+                                                <td><span t-field="log.description"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

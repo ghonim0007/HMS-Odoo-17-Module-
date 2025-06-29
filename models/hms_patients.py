@@ -15,10 +15,22 @@ class Patient(models.Model):
         ('serious', 'Serious'),
     ]
 
+    BLOOD_TYPES = [
+        ('A+', 'A+'),
+        ('A-', 'A-'),
+        ('B+', 'B+'),
+        ('B-', 'B-'),
+        ('AB+', 'AB+'),
+        ('AB-', 'AB-'),
+        ('O+', 'O+'),
+        ('O-', 'O-'),
+    ]
+
     name = fields.Char(string='Patient Name')
     birth_date = fields.Date(string='Birth Date')
     age = fields.Integer(string='Age', compute='_compute_age', store=True)
     email = fields.Char(string='Email')
+    blood_type = fields.Selection(BLOOD_TYPES, string='Blood Type')
     department_id = fields.Many2one(
         'hms.department',
         string="Department",

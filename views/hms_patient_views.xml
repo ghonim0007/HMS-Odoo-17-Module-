@@ -8,6 +8,7 @@
                 <field name="name"/>
                 <field name="birth_date"/>
                 <field name="age"/>
+                <field name="blood_type"/>
                 <field name="email"/>
                 <field name="department_id"/>
                 <field name="state"/>
@@ -27,6 +28,7 @@
                             <field name="name"/>
                             <field name="birth_date"/>
                             <field name="age"/>
+                            <field name="blood_type"/>
                             <field name="email"/>
                         </group>
                         <group>
