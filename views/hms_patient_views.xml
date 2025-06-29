@@ -6,7 +6,9 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="name"/>
+                <field name="birth_date"/>
                 <field name="age"/>
+                <field name="email"/>
                 <field name="department_id"/>
                 <field name="state"/>
             </tree>
@@ -21,15 +23,27 @@
             <form>
                 <sheet>
                     <group>
-                        <field name="name"/>
-                        <field name="age"/>
-                        <field name="department_id"/>
-                        <field name="department_capacity"/>
-                        <field name="doctor_ids" widget="many2many_tags"/>
-                        <field name="state"/>
-                        <field name="pcr"/>
-                        <field name="cr_ratio"/>
-                        <field name="history"/>
+                        <group>
+                            <field name="name"/>
+                            <field name="birth_date"/>
+                            <field name="age"/>
+                            <field name="email"/>
+                        </group>
+                        <group>
+                            <field name="department_id"/>
+                            <field name="department_capacity"/>
+                            <field name="doctor_ids" widget="many2many_tags"/>
+                            <field name="state"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="pcr"/>
+                            <field name="cr_ratio"/>
+                        </group>
+                        <group>
+                            <field name="history"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Log History">

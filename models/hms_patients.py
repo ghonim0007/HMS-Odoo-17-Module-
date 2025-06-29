@@ -2,6 +2,7 @@ from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 from lxml import etree
 import json
+from datetime import date
 
 class Patient(models.Model):
     _name = 'hms.patient'
@@ -15,7 +16,9 @@ class Patient(models.Model):
     ]
 
     name = fields.Char(string='Patient Name')
-    age = fields.Integer(string='Age')
+    birth_date = fields.Date(string='Birth Date')
+    age = fields.Integer(string='Age', compute='_compute_age', store=True)
+    email = fields.Char(string='Email')
     department_id = fields.Many2one(
         'hms.department',
         string="Department",
@@ -42,6 +45,37 @@ class Patient(models.Model):
     pcr = fields.Boolean(string='PCR')
     cr_ratio = fields.Float(string='CR Ratio')
     history = fields.Text(string='Medical History')
+
+    @api.depends('birth_date')
+    def _compute_age(self):
+        for record in self:
+            if record.birth_date:
+                today = date.today()
+                birth_date = record.birth_date
+                age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
+                record.age = age
+            else:
+                record.age = 0
+
+    @api.constrains('email')
+    def _check_email_validity(self):
+        for record in self:
+            if record.email:
+                import re
+                email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+                if not re.match(email_pattern, record.email):
+                    raise ValidationError("Please enter a valid email address!")
+
+    @api.constrains('email')
+    def _check_email_unique(self):
+        for record in self:
+            if record.email:
+                existing_patient = self.search([
+                    ('email', '=', record.email),
+                    ('id', '!=', record.id)
+                ])
+                if existing_patient:
+                    raise ValidationError("Email address must be unique! This email is already assigned to another patient.")
 
     @api.constrains('department_id')
     def _check_department_open(self):
@@ -90,7 +124,6 @@ class Patient(models.Model):
             if self.env.context.get('default_age', 0) < 50:
                 history_field_nodes = doc.xpath("//field[@name='history']")
                 for node in history_field_nodes:
-                    # Mark the field as invisible
                     node.set('invisible', '1')
                     modifiers = json.loads(node.get("modifiers", '{}'))
                     modifiers['invisible'] = True
